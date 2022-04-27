@@ -1,4 +1,4 @@
-import mongoose, { Schema, Model } from 'mongoose';
+import mongoose, { Schema, Model, Document } from 'mongoose';
 
 export interface IProject {
   readonly _id: mongoose.Types.ObjectId;
@@ -26,5 +26,7 @@ const ProjectSchema: Schema = new mongoose.Schema({
   updatedAt: Date,
 });
 
-export const ProjectModel: Model<IProject> =
+export type ProjectModelType = Model<IProject>;
+
+export const ProjectModel: ProjectModelType =
   mongoose.models.project || mongoose.model('project', ProjectSchema);

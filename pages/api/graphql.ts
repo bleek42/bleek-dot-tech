@@ -4,32 +4,26 @@ import { ApolloServerPluginLandingPageGraphQLPlayground } from 'apollo-server-co
 import { buildSchema } from 'type-graphql';
 import type { NextApiHandler } from 'next';
 
-import clientPromise from './config/client.config';
-
-const schema = async () => {
-  return await buildSchema({
-    resolvers: [],
-  });
-};
-
-const server = new ApolloServer({
-  schema,
-  context: async () => {
-    const db = await clientPromise;
-    return { db };
-  },
-  plugins: [
-    ...(process.env.NODE_ENV === 'development'
-      ? [ApolloServerPluginLandingPageGraphQLPlayground]
-      : []),
-  ],
-});
-
-let graphqlHandler: NextApiHandler | undefined;
+import dbConnection from './config/db.config';
+import type { ProjectResolvers } from './graphql/project.resolvers';
 
 const apiHandler: NextApiHandler = async (req, res) => {
+  let graphqlHandler: NextApiHandler | undefined;
+
+  const schema = await buildSchema({ resolvers: [ProjectResolvers] });
+  const server = new ApolloServer({
+    schema,
+    context: {},
+    plugins: [
+      ...(process.env.NODE_ENV === 'development'
+        ? [ApolloServerPluginLandingPageGraphQLPlayground]
+        : []),
+    ],
+  });
+
   if (!graphqlHandler) {
     await server.start();
+    await dbConnection();
     graphqlHandler = server.createHandler({ path: '/api/graphql' });
   }
   return graphqlHandler(req, res);

@@ -1,41 +1,66 @@
 import * as mongoose from 'mongoose';
-import { Field, ObjectType } from 'type-graphql';
+import { Field, InputType, InputType, ObjectType } from 'type-graphql';
 import { GraphQLObjectID, GraphQLURL } from 'graphql-scalars';
 
 @ObjectType()
 export class Project {
-  @Field(() => GraphQLObjectID)
+  @Field((_type) => GraphQLObjectID)
   readonly _id!: mongoose.Types.ObjectId;
 
-  @Field(() => String)
+  @Field((_type) => String)
   public title!: string;
 
-  @Field(() => String)
+  @Field((_type) => String)
   public description!: string;
 
-  @Field(() => GraphQLURL)
+  @Field((_type) => GraphQLURL)
   public link!: URL;
 
-  @Field((type) => [String])
+  @Field((_type) => [String])
   public frontEnd?: mongoose.Types.Array<string>;
 
-  @Field((type) => [String])
+  @Field((_type) => [String])
   public backEnd?: mongoose.Types.Array<string>;
 
-  @Field((type) => [String])
+  @Field((_type) => [String])
   public dataBase?: mongoose.Types.Array<string>;
 
-  @Field((type) => [String])
+  @Field((_type) => [String])
   public tools?: mongoose.Types.Array<string>;
 
-  @Field((type) => [String])
-  public sourceCode?: mongoose.Types.Array<string>;
+  @Field((_type) => [URL])
+  public sourceCode!: mongoose.Types.Array<URL>;
 
-  @Field((type) => [String])
+  @Field((_type) => [String])
   public screenShots?: mongoose.Types.Array<string>;
 }
 
-export class ProjectInput {
+@InputType()
+export class ProjectInput implements Partial<Project> {
   @Field()
-  
+  title!: string;
+
+  @Field()
+  public description!: string;
+
+  @Field()
+  public link!: URL;
+
+  @Field((_returns) => [String])
+  public frontEnd!: mongoose.Types.Array<string>;
+
+  @Field((_returns) => [String])
+  public backEnd?: mongoose.Types.Array<string>;
+
+  @Field((_returns) => [String])
+  public dataBase?: mongoose.Types.Array<string>;
+
+  @Field((_returns) => [String])
+  public tools?: mongoose.Types.Array<string>;
+
+  @Field((_returns) => [URL])
+  public sourceCode?: mongoose.Types.Array<URL>;
+
+  @Field((_returns) => [String])
+  public screenShots?: mongoose.Types.Array<string>;
 }

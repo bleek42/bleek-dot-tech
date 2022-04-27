@@ -11,20 +11,23 @@
   },
   "dependencies": {
     "@apollo/client": "^3.5.10",
+    "@graphql-tools/schema": "^8.3.10",
     "@graphql-tools/utils": "^8.6.9",
     "apollo-server-micro": "^3.6.1",
+    "class-validator": "^0.13.2",
     "dotenv": "^10.0.0",
-    "graphql": "^16.2.0",
+    "graphql": "^15.8.0",
     "graphql-scalars": "^1.17.0",
-    "graphql-tools": "^8.2.8",
     "micro": "^9.3.4",
-    "mongoose": "^6.1.5",
+    "mongoose": "^6.3.1",
     "next": "^11.1.4",
     "npm": "^8.7.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-icons": "^4.2.0",
-    "sass": "^1.42.1"
+    "reflect-metadata": "^0.1.13",
+    "sass": "^1.42.1",
+    "type-graphql": "^1.1.1"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^2.6.2",

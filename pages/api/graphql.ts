@@ -1,18 +1,21 @@
+import 'reflect-metadata';
 import { ApolloServer } from 'apollo-server-micro';
 import { ApolloServerPluginLandingPageGraphQLPlayground } from 'apollo-server-core';
-import * as dotenv from 'dotenv';
-import mongoose from 'mongoose';
+import { buildSchema } from 'type-graphql';
+import type { NextApiHandler } from 'next';
 
-import { schema } from './graphql/schema';
+import clientPromise from './config/client.config';
 
-import { NextApiHandler } from 'next';
-
-dotenv.config();
+const schema = async () => {
+  return await buildSchema({
+    resolvers: [],
+  });
+};
 
 const server = new ApolloServer({
   schema,
   context: async () => {
-    const db = await mongoose.connect(process.env.MONGODB_URI as string);
+    const db = await clientPromise;
     return { db };
   },
   plugins: [

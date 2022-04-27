@@ -1,32 +1,16 @@
-import { models } from 'mongoose';
 import { ApolloError } from 'apollo-server-micro';
 import { IResolvers } from '@graphql-tools/utils';
-import {
-  DateResolver,
-  GraphQLObjectID,
-  ObjectIDResolver,
-  URLResolver,
-} from 'graphql-scalars';
-
-import { IProject } from '../../../types/project';
-import { Project } from '../models/project.model';
+import { DateResolver, ObjectIDResolver, URLResolver } from 'graphql-scalars';
 
 export const resolvers: IResolvers = {
   ObjectID: ObjectIDResolver,
   Date: DateResolver,
   URL: URLResolver,
 
-  TechCategory: {
-    FRONTEND: 'FrontEnd',
-    BACKEND: 'Backend',
-    DATABASE: 'Database',
-    TOOLS: 'Tools',
-  },
-
   Query: {
     async projects(_parent, _args, _ctx): Promise<IProject[]> {
-      const projects = await Project.find({});
-      return projects;
+      const projects = Project.find({});
+      return await projects;
     },
   },
 
@@ -34,27 +18,36 @@ export const resolvers: IResolvers = {
     async createProject(
       _parent: any,
       {
-        _id,
         title,
         description,
         link,
-        techStack,
+        frontend,
+        backend,
+        database,
+        tools,
         sourceCode,
         screenShots,
-      }: Partial<IProject>,
-      _ctx: any
+      }: ProjectModel,
+      ctx: Connection
     ): Promise<IProject> {
-      const project = new Project({
-        _id: GraphQLObjectID,
-        title,
-        description,
-        link,
-        techStack,
-        sourceCode,
-        screenShots,
-      });
-
-      return await project.save();
+      const project = new Project();
+      try {
+        await project.create({
+          _id: new Types.ObjectId(),
+          title,
+          description,
+          link,
+          frontend,
+          backend,
+          database,
+          tools,
+          sourceCode,
+          screenShots,
+        });
+        return project;
+      } catch (err) {
+        console.error(err);
+      }
     },
   },
 };
